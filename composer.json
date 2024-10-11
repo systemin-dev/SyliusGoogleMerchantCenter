@@ -1,10 +1,20 @@
 {
+    "name": "lilian/sylius-google-merchant-center",
+    "description": "A Sylius plugin to integrate with Google Merchant Center.",
     "type": "sylius-plugin",
     "keywords": [
         "sylius",
-        "sylius-plugin"
+        "sylius-plugin",
+        "google merchant center",
+        "product feed"
     ],
-    "license": "proprietary",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Lilian",
+            "email": "lilian@systemin.fr"
+        }
+    ],
     "require": {
         "php": "^8.1",
         "sylius/sylius": "~1.13.0",
