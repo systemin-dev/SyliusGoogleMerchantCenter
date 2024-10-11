@@ -5,9 +5,10 @@ services:
     
     Lilian\SyliusGoogleMerchantCenter\Controller\ProductFeedController:
         arguments:
-            $productFeedGenerator: '@SyliusGoogleMerchantCenter\Generator\ProductFeedGenerator'
+            $productFeedGenerator: '@Lilian\SyliusGoogleMerchantCenter\Generator\ProductFeedGenerator'
+    
     Lilian\SyliusGoogleMerchantCenter\Command\GenerateProductFeedCommand:
         arguments:
-            $productFeedGenerator: '@SyliusGoogleMerchantCenter\Generator\ProductFeedGenerator'
+            $productFeedGenerator: '@Lilian\SyliusGoogleMerchantCenter\Generator\ProductFeedGenerator'
         tags:
             - { name: 'console.command' }
