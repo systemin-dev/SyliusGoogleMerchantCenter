@@ -1,0 +1,13 @@
+services:
+    SyliusGoogleMerchantCenter\Generator\ProductFeedGenerator:
+        arguments:
+            $productRepository: '@sylius.repository.product'
+    
+    SyliusGoogleMerchantCenter\Controller\ProductFeedController:
+        arguments:
+            $productFeedGenerator: '@SyliusGoogleMerchantCenter\Generator\ProductFeedGenerator'
+    SyliusGoogleMerchantCenter\Command\GenerateProductFeedCommand:
+        arguments:
+            $productFeedGenerator: '@SyliusGoogleMerchantCenter\Generator\ProductFeedGenerator'
+        tags:
+            - { name: 'console.command' }
