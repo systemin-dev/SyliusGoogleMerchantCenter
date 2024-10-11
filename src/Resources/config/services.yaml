@@ -1,12 +1,12 @@
 services:
-    lilian\SyliusGoogleMerchantCenter\Generator\ProductFeedGenerator:
+    Lilian\SyliusGoogleMerchantCenter\Generator\ProductFeedGenerator:
         arguments:
             $productRepository: '@sylius.repository.product'
     
-    lilian\SyliusGoogleMerchantCenter\Controller\ProductFeedController:
+    Lilian\SyliusGoogleMerchantCenter\Controller\ProductFeedController:
         arguments:
             $productFeedGenerator: '@SyliusGoogleMerchantCenter\Generator\ProductFeedGenerator'
-    lilian\SyliusGoogleMerchantCenter\Command\GenerateProductFeedCommand:
+    Lilian\SyliusGoogleMerchantCenter\Command\GenerateProductFeedCommand:
         arguments:
             $productFeedGenerator: '@SyliusGoogleMerchantCenter\Generator\ProductFeedGenerator'
         tags:

@@ -1,8 +1,8 @@
 <?php
 
-namespace lilian\SyliusGoogleMerchantCenter\Command;
+namespace Lilian\SyliusGoogleMerchantCenter\Command;
 
-use lilian\SyliusGoogleMerchantCenter\Generator\ProductFeedGenerator;
+use Lilian\SyliusGoogleMerchantCenter\Generator\ProductFeedGenerator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

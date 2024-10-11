@@ -70,7 +70,7 @@
     },
     "autoload": {
         "psr-4": {
-            "lilian\\SyliusGoogleMerchantCenter\\": "src/"
+            "Lilian\\SyliusGoogleMerchantCenter\\": "src/"
         }
     },
     "autoload-dev": {

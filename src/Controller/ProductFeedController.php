@@ -1,8 +1,8 @@
 <?php
 
-namespace lilian\SyliusGoogleMerchantCenter\Controller;
+namespace Lilian\SyliusGoogleMerchantCenter\Controller;
 
-use lilian\SyliusGoogleMerchantCenter\Generator\ProductFeedGenerator;
+use Lilian\SyliusGoogleMerchantCenter\Generator\ProductFeedGenerator;
 use Symfony\Component\HttpFoundation\Response;
 
 class ProductFeedController
