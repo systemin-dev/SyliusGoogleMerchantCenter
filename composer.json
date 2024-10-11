@@ -20,12 +20,6 @@
         "sylius/sylius": "~1.13.0",
         "symfony/webpack-encore-bundle": "^1.15"
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "git@79.86.252.210:Lilian/sylius-google-merchant-center.git"
-        }
-    ],
     "require-dev": {
         "behat/behat": "^3.6.1",
         "behat/mink-selenium2-driver": "^1.4",
@@ -76,8 +70,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Acme\\SyliusExamplePlugin\\": "src/",
-            "Tests\\Acme\\SyliusExamplePlugin\\": "tests/"
+            "lilian\\SyliusGoogleMerchantCenter\\": "src/"
         }
     },
     "autoload-dev": {

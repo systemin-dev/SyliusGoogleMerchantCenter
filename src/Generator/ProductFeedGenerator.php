@@ -1,6 +1,6 @@
 <?php
 
-namespace SyliusGoogleMerchantCenter\Generator;
+namespace lilian\SyliusGoogleMerchantCenter\Generator;
 
 use Sylius\Component\Core\Repository\ProductRepositoryInterface;
 use Symfony\Component\HttpFoundation\Response;
