@@ -43,7 +43,7 @@ class ProductFeedGenerator
             // Récupérer le schéma et l'hôte depuis les variables d'environnement
             if ($image) {
                 // En utilisant ABSOLUTE_URL, Symfony ajoutera automatiquement le domaine défini dans default_uri
-                $absoluteImageLink =  $this->router->getContext()->getScheme() . '://' . $this->router->getContext()->getHost() . '/media/image' . $image->getPath();
+                $absoluteImageLink =  $this->router->getContext()->getScheme() . '://' . $this->router->getContext()->getHost() . '/media/image/' . $image->getPath();
                 $item->addChild('image_link', $absoluteImageLink);
             }
 
