@@ -2,6 +2,7 @@ services:
     Lilian\SyliusGoogleMerchantCenter\Generator\ProductFeedGenerator:
         arguments:
             $productRepository: '@sylius.repository.product'
+            $router: '@router'
     
     Lilian\SyliusGoogleMerchantCenter\Controller\ProductFeedController:
         arguments:

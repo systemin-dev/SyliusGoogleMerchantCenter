@@ -35,14 +35,13 @@ class GenerateProductFeedCommand extends Command
         // Generate the feed
         $response = $this->productFeedGenerator->generateFeed();
 
-        // Define the path where you want to save the file
-        $filePath = '/path/to/your/feed.xml';
+        // Define the path where you want to save the file in the public directory
+        $filePath = 'public/feed.xml';
 
         // Save the response content to a file
         file_put_contents($filePath, $response->getContent());
 
         $io->success('Google Merchant Center feed generated successfully at ' . $filePath);
-
         return Command::SUCCESS;
     }
 }
