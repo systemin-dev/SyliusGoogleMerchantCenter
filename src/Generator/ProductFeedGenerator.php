@@ -45,7 +45,7 @@ class ProductFeedGenerator
             }
     
             // Champs obligatoires supplémentaires
-            $item->addChild('availability', $product->isInStock() ? 'in stock' : 'out of stock'); // Disponibilité
+            // $item->addChild('availability', $product->isInStock() ? 'in stock' : 'out of stock'); // Disponibilité
             $item->addChild('availability_date', $product->getAvailabilityDate()->format('Y-m-d')); // Date de disponibilité
     
             $variant = $product->getVariants()->first();
