@@ -46,14 +46,14 @@ class ProductFeedGenerator
     
             // Champs obligatoires supplémentaires
             // $item->addChild('availability', $product->isInStock() ? 'in stock' : 'out of stock'); // Disponibilité
-            $item->addChild('availability_date', $product->getAvailabilityDate()->format('Y-m-d')); // Date de disponibilité
+            // $item->addChild('availability_date', $product->getAvailabilityDate()->format('Y-m-d')); // Date de disponibilité
     
             $variant = $product->getVariants()->first();
             if ($variant) {
                 $channelPricing = $variant->getChannelPricings()->first();
                 if ($channelPricing !== false) {
-                    // $price = $channelPricing->getPrice() / 100; // Diviser par 100 si le prix est en centimes
-                    // $item->addChild('price', $price . ' EUR'); // Ajouter la devise
+                    $price = $channelPricing->getPrice() / 100; // Diviser par 100 si le prix est en centimes
+                    $item->addChild('price', $price . ' EUR'); // Ajouter la devise
                 }
     
                 // Identifiant de groupe d'articles
