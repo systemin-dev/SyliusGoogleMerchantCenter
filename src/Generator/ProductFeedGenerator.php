@@ -52,18 +52,18 @@ class ProductFeedGenerator
             if ($variant) {
                 $channelPricing = $variant->getChannelPricings()->first();
                 if ($channelPricing !== false) {
-                    $price = $channelPricing->getPrice() / 100; // Diviser par 100 si le prix est en centimes
-                    $item->addChild('price', $price . ' EUR'); // Ajouter la devise
+                    // $price = $channelPricing->getPrice() / 100; // Diviser par 100 si le prix est en centimes
+                    // $item->addChild('price', $price . ' EUR'); // Ajouter la devise
                 }
     
                 // Identifiant de groupe d'articles
-                $item->addChild('item_group_id', $variant->getCode());
+                // $item->addChild('item_group_id', $variant->getCode());
             }
     
             // Autres champs recommandés
-            $item->addChild('brand', $product->getBrand()); // Marque
-            $item->addChild('condition', 'new'); // Condition, ici on suppose que c'est 'new', ajustez en fonction de votre logique
-            $item->addChild('shipping', 'standard'); // Informations de livraison à ajuster
+            // $item->addChild('brand', $product->getBrand()); // Marque
+            // $item->addChild('condition', 'new'); // Condition, ici on suppose que c'est 'new', ajustez en fonction de votre logique
+            // $item->addChild('shipping', 'standard'); // Informations de livraison à ajuster
         }
     
         $response = new Response($xml->asXML());
