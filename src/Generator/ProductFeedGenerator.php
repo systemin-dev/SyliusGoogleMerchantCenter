@@ -45,10 +45,16 @@ class ProductFeedGenerator
             }
     
             // Champs obligatoires supplémentaires
-            // $item->addChild('availability', $product->isInStock() ? 'in stock' : 'out of stock'); // Disponibilité
             // $item->addChild('availability_date', $product->getAvailabilityDate()->format('Y-m-d')); // Date de disponibilité
     
             $variant = $product->getVariants()->first();
+            $item->addChild('availability', $variant->isInStock() ? 'in stock' : 'preorder'); // Disponibilité
+
+            if (!$variant->isInStock()) {
+                // Si le produit n'est pas en stock, ajouter une date de disponibilité dans 1 mois
+                $availabilityDate = (new \DateTime())->modify('+1 month')->format('Y-m-d\TH:i:s\Z');
+                $item->addChild('availability_date', $availabilityDate);
+            }
             if ($variant) {
                 $channelPricing = $variant->getChannelPricings()->first();
                 if ($channelPricing !== false) {
@@ -61,9 +67,9 @@ class ProductFeedGenerator
             }
     
             // Autres champs recommandés
-            // $item->addChild('brand', $product->getBrand()); // Marque
-            // $item->addChild('condition', 'new'); // Condition, ici on suppose que c'est 'new', ajustez en fonction de votre logique
-            // $item->addChild('shipping', 'standard'); // Informations de livraison à ajuster
+            $item->addChild('brand', 'Ma Pépinière'); // Marque
+            $item->addChild('condition', 'new'); // Condition, ici on suppose que c'est 'new', ajustez en fonction de votre logique
+            $item->addChild('shipping', 'standard'); // Informations de livraison à ajuster
         }
     
         $response = new Response($xml->asXML());
