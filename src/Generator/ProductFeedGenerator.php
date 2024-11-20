@@ -6,7 +6,6 @@ use Sylius\Component\Core\Repository\ProductRepositoryInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 
-
 class ProductFeedGenerator
 {
     private $productRepository;
@@ -16,65 +15,76 @@ class ProductFeedGenerator
     {
         $this->productRepository = $productRepository;
         $this->router = $router;
-        
     }
 
     public function generateFeed(): Response
     {
         $products = $this->productRepository->findAll();
-        $xml = new \SimpleXMLElement('<feed/>');
-    
+        $xml = new \SimpleXMLElement('<rss version="2.0" xmlns:g="http://base.google.com/ns/1.0"></rss>');
+        $channel = $xml->addChild('channel');
+        $channel->addChild('title', 'Ma Pépinière');
+        $channel->addChild('link', 'https://www.ma-pepiniere.fr');
+        $channel->addChild('description', 'Découvrez notre collection de plantes et accessoires.');
+
         foreach ($products as $product) {
-            $item = $xml->addChild('item');
-            $item->addChild('id', $product->getId());
-            $item->addChild('title', $product->getName());
-            $item->addChild('description', $product->getDescription());
-    
-            // Utiliser le router pour générer le lien à partir du slug du produit
+            $item = $channel->addChild('item');
+            $item->addChild('g:id', $product->getId(), 'http://base.google.com/ns/1.0');
+            $item->addChild('title', htmlspecialchars($product->getName()), 'http://base.google.com/ns/1.0');
+            $item->addChild('description', htmlspecialchars($product->getDescription()), 'http://base.google.com/ns/1.0');
+
+            // Génération du lien produit
             $locale = $product->getTranslation()->getLocale();
             $link = $this->router->generate('sylius_shop_product_show', [
                 'slug' => $product->getSlug(),
                 '_locale' => $locale,
             ], RouterInterface::ABSOLUTE_URL);
             $item->addChild('link', $link);
-    
+
+            // Image principale
             $image = $product->getImages()->first();
             if ($image) {
-                $absoluteImageLink =  $this->router->getContext()->getScheme() . '://' . $this->router->getContext()->getHost() . '/media/image/' . $image->getPath();
-                $item->addChild('image_link', $absoluteImageLink);
+                $absoluteImageLink = $this->router->getContext()->getScheme() . '://' . $this->router->getContext()->getHost() . '/media/image/' . $image->getPath();
+                $item->addChild('g:image_link', $absoluteImageLink, 'http://base.google.com/ns/1.0');
             }
-    
-            // Champs obligatoires supplémentaires
-            // $item->addChild('availability_date', $product->getAvailabilityDate()->format('Y-m-d')); // Date de disponibilité
-    
-            $variant = $product->getVariants()->first();
-            $item->addChild('availability', $variant->isInStock() ? 'in stock' : 'preorder'); // Disponibilité
 
-            if (!$variant->isInStock()) {
-                // Si le produit n'est pas en stock, ajouter une date de disponibilité dans 1 mois
-                $availabilityDate = (new \DateTime())->modify('+1 month')->format('Y-m-d\TH:i:s\Z');
-                $item->addChild('availability_date', $availabilityDate);
-            }
+            // Variantes
+            $variant = $product->getVariants()->first();
             if ($variant) {
+                // Disponibilité
+                $availability = $variant->isInStock() ? 'in stock' : 'out of stock';
+                $item->addChild('g:availability', $availability, 'http://base.google.com/ns/1.0');
+
+                // Prix
                 $channelPricing = $variant->getChannelPricings()->first();
                 if ($channelPricing !== false) {
                     $price = $channelPricing->getPrice() / 100; // Diviser par 100 si le prix est en centimes
-                    $item->addChild('price', $price . ' EUR'); // Ajouter la devise
+                    $item->addChild('g:price', $price . ' EUR', 'http://base.google.com/ns/1.0');
                 }
-    
+
+                // Date de disponibilité si précommande
+                if (!$variant->isInStock()) {
+                    $availabilityDate = (new \DateTime())->modify('+1 month')->format('Y-m-d\TH:i:s\Z');
+                    $item->addChild('g:availability_date', $availabilityDate, 'http://base.google.com/ns/1.0');
+                }
+
                 // Identifiant de groupe d'articles
-                // $item->addChild('item_group_id', $variant->getCode());
+                $item->addChild('g:item_group_id', $variant->getCode(), 'http://base.google.com/ns/1.0');
             }
-    
-            // Autres champs recommandés
-            $item->addChild('brand', 'Ma Pépinière'); // Marque
-            $item->addChild('condition', 'new'); // Condition, ici on suppose que c'est 'new', ajustez en fonction de votre logique
-            $item->addChild('shipping', 'standard'); // Informations de livraison à ajuster
+
+            // Marque
+            $item->addChild('g:brand', 'Ma Pépinière', 'http://base.google.com/ns/1.0');
+
+            // Condition
+            $item->addChild('g:condition', 'new', 'http://base.google.com/ns/1.0');
+
+            // Livraison
+            $shipping = $item->addChild('g:shipping', '', 'http://base.google.com/ns/1.0');
+            $shipping->addChild('g:country', 'FR', 'http://base.google.com/ns/1.0');
+            $shipping->addChild('g:price', '14.00 EUR', 'http://base.google.com/ns/1.0'); // Ajustez selon vos règles de livraison
         }
-    
+
         $response = new Response($xml->asXML());
         $response->headers->set('Content-Type', 'text/xml');
         return $response;
     }
-    
 }
