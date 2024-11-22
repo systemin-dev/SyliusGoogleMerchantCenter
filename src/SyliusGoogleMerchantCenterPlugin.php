@@ -1,10 +1,10 @@
 <?php
 
-namespace Lilian\SyliusGoogleMerchantCenter;
+namespace Systemin\SyliusGoogleMerchantCenter;
 
 use Sylius\Bundle\CoreBundle\Application\SyliusPluginTrait;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
-use Lilian\SyliusGoogleMerchantCenter\DependencyInjection\SyliusGoogleMerchantCenterExtension;
+use Systemin\SyliusGoogleMerchantCenter\DependencyInjection\SyliusGoogleMerchantCenterExtension;
 
 class SyliusGoogleMerchantCenterPlugin extends Bundle
 {

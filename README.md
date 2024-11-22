@@ -66,6 +66,7 @@ Copier le code
       <g:availability>in stock</g:availability>
       <g:price>49.99 EUR</g:price>
       <g:brand>Ma Pépinière</g:brand>
+      
       <g:condition>new</g:condition>
       <g:shipping>
         <g:country>FR</g:country>

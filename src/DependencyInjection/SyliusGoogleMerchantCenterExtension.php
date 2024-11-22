@@ -1,6 +1,6 @@
 <?php
 
-namespace Lilian\SyliusGoogleMerchantCenter\DependencyInjection;
+namespace Systemin\SyliusGoogleMerchantCenter\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
