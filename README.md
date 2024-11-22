@@ -1,122 +1,102 @@
-<p align="center">
-    <a href="https://sylius.com" target="_blank">
-        <img src="https://demo.sylius.com/assets/shop/img/logo.png" />
-    </a>
-</p>
+Sylius Google Merchant Center Plugin
+Description
+This is a Sylius plugin designed to generate a Google Merchant Center XML feed, allowing you to easily integrate your Sylius online store's products into Google Shopping.
 
-<h1 align="center">Plugin Skeleton</h1>
+The plugin extracts product data, variants, images, prices, and availability, fully complying with Google Merchant Center specifications.
 
-<p align="center">Skeleton for starting Sylius plugins.</p>
+Features
+Automatic generation of an XML feed formatted for Google Merchant Center.
+Integration of product and variant details, including:
+Unique identifier (g:id)
+Title (g:title) and description (g:description)
+Product page link (link)
+Main image (g:image_link)
+Price (g:price) and currency
+Availability (g:availability)
+Brand (g:brand)
+Condition (g:condition)
+Shipping (g:shipping)
+Preorder support with an availability date (g:availability_date).
+Item group identification with a group ID (g:item_group_id).
+Installation
+Install the plugin via Composer:
 
-## Documentation
+Run the following command:
 
-For a comprehensive guide on Sylius Plugins development please go to Sylius documentation,
-there you will find the <a href="https://docs.sylius.com/en/latest/plugin-development-guide/index.html">Plugin Development Guide</a>, that is full of examples.
+bash
+Copier le code
+composer require systemin-dev/sylius-google-merchant-center
+Add the service configuration:
 
-## Quickstart Installation
+Add the feed generator service in your services.yaml file:
 
-### Traditional
+yaml
+Copier le code
+services:
+    Systemin\SyliusGoogleMerchantCenter\Generator\ProductFeedGenerator:
+        arguments:
+            $productRepository: '@sylius.repository.product'
+            $router: '@router'
+Configure the route:
 
-1. Run `composer create-project sylius/plugin-skeleton ProjectName`.
+Add a route to access the XML feed:
 
-2. From the plugin skeleton root directory, run the following commands:
+yaml
+Copier le code
+sylius_google_merchant_feed:
+    path: /google-merchant-feed
+    controller: Systemin\SyliusGoogleMerchantCenter\Controller\ProductFeedController::generateFeed
+Usage
+Access the configured URL (e.g., /google-merchant-feed) to generate and retrieve the XML feed. This URL will return an XML file compatible with Google Merchant Center.
 
-    ```bash
-    $ (cd tests/Application && yarn install)
-    $ (cd tests/Application && yarn build)
-    $ (cd tests/Application && APP_ENV=test bin/console assets:install public)
-    
-    $ (cd tests/Application && APP_ENV=test bin/console doctrine:database:create)
-    $ (cd tests/Application && APP_ENV=test bin/console doctrine:schema:create)
-    ```
+Sample Generated Feed
+xml
+Copier le code
+<rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">
+  <channel>
+    <title>Ma Pépinière</title>
+    <link>https://www.ma-pepiniere.fr</link>
+    <description>Discover our collection of plants and accessories.</description>
+    <item>
+      <g:id>1</g:id>
+      <g:title>Ficus Elastica</g:title>
+      <g:description>A perfect plant for bright interiors.</g:description>
+      <link>https://www.ma-pepiniere.fr/product/ficus-elastica</link>
+      <g:image_link>https://www.ma-pepiniere.fr/media/image/ficus.jpg</g:image_link>
+      <g:availability>in stock</g:availability>
+      <g:price>49.99 EUR</g:price>
+      <g:brand>Ma Pépinière</g:brand>
+      <g:condition>new</g:condition>
+      <g:shipping>
+        <g:country>FR</g:country>
+        <g:price>14.00 EUR</g:price>
+      </g:shipping>
+    </item>
+  </channel>
+</rss>
+Customization
+Modify Feed Information
+Feed title, link, and description: Edit the default values in the generateFeed() method of the ProductFeedGenerator class:
 
-To be able to set up a plugin's database, remember to configure you database credentials in `tests/Application/.env` and `tests/Application/.env.test`.
+php
+Copier le code
+$channel->addChild('title', 'Your Store Title');
+$channel->addChild('link', 'https://www.yourstore.com');
+$channel->addChild('description', 'Your custom description.');
+Shipping price: Adjust the shipping price according to your rules:
 
-### Docker
+php
+Copier le code
+$shipping->addChild('g:price', '10.00 EUR', 'http://base.google.com/ns/1.0');
+Testing
+Verify that the products and variants are displayed correctly in the generated feed.
+Upload the feed to Google Merchant Center to validate compliance.
+Contribution
+Contributions are welcome! Follow these steps to contribute:
 
-1. Execute `docker compose up -d`
-
-2. Initialize plugin `docker compose exec app make init`
-
-3. See your browser `open localhost`
-
-## Usage
-
-### Running plugin tests
-
-  - PHPUnit
-
-    ```bash
-    vendor/bin/phpunit
-    ```
-
-  - PHPSpec
-
-    ```bash
-    vendor/bin/phpspec run
-    ```
-
-  - Behat (non-JS scenarios)
-
-    ```bash
-    vendor/bin/behat --strict --tags="~@javascript"
-    ```
-
-  - Behat (JS scenarios)
- 
-    1. [Install Symfony CLI command](https://symfony.com/download).
- 
-    2. Start Headless Chrome:
-    
-      ```bash
-      google-chrome-stable --enable-automation --disable-background-networking --no-default-browser-check --no-first-run --disable-popup-blocking --disable-default-apps --allow-insecure-localhost --disable-translate --disable-extensions --no-sandbox --enable-features=Metal --headless --remote-debugging-port=9222 --window-size=2880,1800 --proxy-server='direct://' --proxy-bypass-list='*' http://127.0.0.1
-      ```
-    
-    3. Install SSL certificates (only once needed) and run test application's webserver on `127.0.0.1:8080`:
-    
-      ```bash
-      symfony server:ca:install
-      APP_ENV=test symfony server:start --port=8080 --dir=tests/Application/public --daemon
-      ```
-    
-    4. Run Behat:
-    
-      ```bash
-      vendor/bin/behat --strict --tags="@javascript"
-      ```
-    
-  - Static Analysis
-  
-    - Psalm
-    
-      ```bash
-      vendor/bin/psalm
-      ```
-      
-    - PHPStan
-    
-      ```bash
-      vendor/bin/phpstan analyse -c phpstan.neon -l max src/  
-      ```
-
-  - Coding Standard
-  
-    ```bash
-    vendor/bin/ecs check
-    ```
-
-### Opening Sylius with your plugin
-
-- Using `test` environment:
-
-    ```bash
-    (cd tests/Application && APP_ENV=test bin/console sylius:fixtures:load)
-    (cd tests/Application && APP_ENV=test bin/console server:run -d public)
-    ```
-    
-- Using `dev` environment:
-
-    ```bash
-    (cd tests/Application && APP_ENV=dev bin/console sylius:fixtures:load)
-    (cd tests/Application && APP_ENV=dev bin/console server:run -d public)
-    ```
+Fork the repository.
+Create a branch: git checkout -b feature/your-feature.
+Make your changes and test them.
+Submit a pull request.
+License
+This project is licensed under the MIT License.
