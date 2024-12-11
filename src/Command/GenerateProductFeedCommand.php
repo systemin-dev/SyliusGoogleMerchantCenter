@@ -30,18 +30,29 @@ class GenerateProductFeedCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        $io->title('Generating Google Merchant Center Product Feed');
 
-        // Generate the feed
-        $response = $this->productFeedGenerator->generateFeed();
+        // Ajout de l'heure actuelle au titre
+        $currentTime = (new \DateTime())->format('Y-m-d H:i:s');
+        $io->title(sprintf('Generating Google Merchant Center Product Feed - %s', $currentTime));
 
-        // Define the path where you want to save the file in the public directory
-        $filePath = 'public/feed.xml';
 
-        // Save the response content to a file
-        file_put_contents($filePath, $response->getContent());
+        try {
+            // Génération du feed
+            $response = $this->productFeedGenerator->generateFeed();
 
-        $io->success('Google Merchant Center feed generated successfully at ' . $filePath);
-        return Command::SUCCESS;
+            // Définir le chemin où sauvegarder le fichier
+            $filePath = 'public/feed.xml';
+
+            // Sauvegarde du contenu dans un fichier
+            file_put_contents($filePath, $response->getContent());
+
+            $io->success('Google Merchant Center feed generated successfully at ' . $filePath);
+            return Command::SUCCESS;
+        } catch (\Exception $e) {
+
+            // Affichage de l'erreur dans la console
+            $io->error('An error occurred: ' . $e->getMessage());
+            return Command::FAILURE;
+        }
     }
 }
