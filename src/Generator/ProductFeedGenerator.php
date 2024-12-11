@@ -5,6 +5,8 @@ namespace Systemin\SyliusGoogleMerchantCenter\Generator;
 use Sylius\Component\Core\Repository\ProductRepositoryInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
+use Systemin\SyliusGoogleMerchantCenter\Services;
+use Systemin\SyliusGoogleMerchantCenter\Services\StockService;
 
 class ProductFeedGenerator
 {
@@ -43,15 +45,21 @@ class ProductFeedGenerator
             // Image principale
             $image = $product->getImages()->first();
             if ($image) {
-                $absoluteImageLink = $this->router->getContext()->getScheme() . '://' . $this->router->getContext()->getHost() . '/media/image/' . $image->getPath();
+                $baseUrl = $this->router->getContext()->getBaseUrl();
+                $absoluteImageLink = $this->router->getContext()->getScheme() . '://' .
+                    $this->router->getContext()->getHost() .
+
+                    $baseUrl . '/media/image/' . $image->getPath();
+
                 $item->addChild('g:image_link', $absoluteImageLink, 'http://base.google.com/ns/1.0');
             }
 
             // Variantes
             $variant = $product->getVariants()->first();
+
             if ($variant) {
                 // Disponibilité
-                $availability = $variant->isInStock() ? 'in stock' : 'out of stock';
+                $availability = StockService::getStockAvailability($product) ? 'in stock' : 'out of stock';
                 $item->addChild('g:availability', $availability, 'http://base.google.com/ns/1.0');
 
                 // Prix
