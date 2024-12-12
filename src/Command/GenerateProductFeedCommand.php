@@ -41,7 +41,9 @@ class GenerateProductFeedCommand extends Command
             $response = $this->productFeedGenerator->generateFeed();
 
             // Définir le chemin où sauvegarder le fichier xml
-            $filePath = 'public/feed.xml';
+            // $filePath = '/var/www/html/boutique.ma-pepiniere/public/feed.xml';
+            $filePath = getenv('GOOGLE_FEED_PATH');
+
 
             // Sauvegarde du contenu dans un fichier
             file_put_contents($filePath, $response->getContent());
