@@ -40,7 +40,7 @@ class GenerateProductFeedCommand extends Command
             // Génération du feed
             $response = $this->productFeedGenerator->generateFeed();
 
-            // Définir le chemin où sauvegarder le fichier
+            // Définir le chemin où sauvegarder le fichier xml
             $filePath = 'public/feed.xml';
 
             // Sauvegarde du contenu dans un fichier
