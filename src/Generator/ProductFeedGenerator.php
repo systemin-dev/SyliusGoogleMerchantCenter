@@ -13,12 +13,12 @@ class ProductFeedGenerator
 {
     private $productRepository;
     private $router;
-    private $url;  
+    private $url;
 
     public function __construct(ProductRepositoryInterface $productRepository, RouterInterface $router, string $url)
     {
         $this->productRepository = $productRepository;
-        $this->router = $router ;
+        $this->router = $router;
         $this->url = $url;
     }
 
@@ -39,10 +39,8 @@ class ProductFeedGenerator
 
             // Génération du lien produit
             $locale = $product->getTranslation()->getLocale();
-            $link = $this->router->generate('sylius_shop_product_show', [
-                'slug' => $product->getSlug(),
-                '_locale' => $locale,
-            ], RouterInterface::ABSOLUTE_URL);
+            $link = $this->url . '/' . $locale .  '/produit/' . $product->getSlug();
+
             $item->addChild('link', $link);
 
             // Image principale
