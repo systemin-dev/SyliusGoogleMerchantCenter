@@ -3,6 +3,7 @@ services:
         arguments:
             $productRepository: '@sylius.repository.product'
             $router: '@router'
+            $url: '%env(APP_SCHEME)%://%env(APP_HOST)%'  # Injection du paramètre app.url
     
     Systemin\SyliusGoogleMerchantCenter\Controller\ProductFeedController:
         arguments:

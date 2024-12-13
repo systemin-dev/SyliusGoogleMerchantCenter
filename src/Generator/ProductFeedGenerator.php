@@ -3,6 +3,7 @@
 namespace Systemin\SyliusGoogleMerchantCenter\Generator;
 
 use Sylius\Component\Core\Repository\ProductRepositoryInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 use Systemin\SyliusGoogleMerchantCenter\Services;
@@ -12,11 +13,13 @@ class ProductFeedGenerator
 {
     private $productRepository;
     private $router;
+    private $url;  
 
-    public function __construct(ProductRepositoryInterface $productRepository, RouterInterface $router)
+    public function __construct(ProductRepositoryInterface $productRepository, RouterInterface $router, string $url)
     {
         $this->productRepository = $productRepository;
-        $this->router = $router;
+        $this->router = $router ;
+        $this->url = $url;
     }
 
     public function generateFeed(): Response
@@ -45,11 +48,7 @@ class ProductFeedGenerator
             // Image principale
             $image = $product->getImages()->first();
             if ($image) {
-                $baseUrl = $this->router->getContext()->getBaseUrl();
-                $absoluteImageLink = $this->router->getContext()->getScheme() . '://' .
-                    $this->router->getContext()->getHost() .
-
-                    $baseUrl . '/media/image/' . $image->getPath();
+                $absoluteImageLink = $this->url . '/media/image/' . $image->getPath();
 
                 $item->addChild('g:image_link', $absoluteImageLink, 'http://base.google.com/ns/1.0');
             }
