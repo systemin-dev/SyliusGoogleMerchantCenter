@@ -42,10 +42,10 @@ class ProductFeedGenerator
 
                 // Génération du lien produit
                 $locale = $product->getTranslation()->getLocale();
-                $link = $this->router->generate('sylius_shop_product_show', [
+                $link = $this->url .'/' .  $this->router->generate('sylius_shop_product_show', [
                     'slug' => $product->getSlug(),
                     '_locale' => $locale,
-                ], RouterInterface::ABSOLUTE_URL);
+                ], RouterInterface::RELATIVE_PATH);
                 $item->addChild('link', $link);
 
                 // Image principale
