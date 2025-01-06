@@ -27,7 +27,7 @@ class StockService
             $availableStock = $onHand - $onHold;
 
             // Si du stock est disponible et que la variante est activée, on marque comme "en stock"
-            $inStock  = $inStock || ($availableStock > 0 && $v->isEnabled());  // Vérification du stock et activation du variant
+            $inStock  = $inStock || ( ($availableStock > 0 || !$v->isTracked())  && $v->isEnabled());  // Vérification du stock et activation du variant
         }
 
         return $inStock;
