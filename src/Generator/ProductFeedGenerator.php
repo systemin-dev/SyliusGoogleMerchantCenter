@@ -34,7 +34,7 @@ class ProductFeedGenerator
         $channel->addChild('description', 'Découvrez notre collection de plantes et accessoires.');
 
         foreach ($products as $product) {
-            if ($product->isEnabled()) {
+            if ($product->isEnabled() && StockService::getStockAvailability($product)) {
                 $item = $channel->addChild('item');
                 $item->addChild('g:id', $product->getId(), 'http://base.google.com/ns/1.0');
                 $item->addChild('title', htmlspecialchars($product->getName()), 'http://base.google.com/ns/1.0');
@@ -42,10 +42,10 @@ class ProductFeedGenerator
 
                 // Génération du lien produit
                 $locale = $product->getTranslation()->getLocale();
-                $link = $this->router->generate('sylius_shop_product_show', [
+                $link = $this->url . '/' .  $this->router->generate('sylius_shop_product_show', [
                     'slug' => $product->getSlug(),
                     '_locale' => $locale,
-                ], RouterInterface::ABSOLUTE_URL);
+                ], RouterInterface::RELATIVE_PATH);
                 $item->addChild('link', $link);
 
                 // Image principale
@@ -55,12 +55,12 @@ class ProductFeedGenerator
 
                     $item->addChild('g:image_link', $absoluteImageLink, 'http://base.google.com/ns/1.0');
                 }
-
+                // On vérifie juste s'il existe une variante    
                 $variant = $product->getVariants()->first();
 
                 if ($variant) {
                     // Disponibilité
-                    $availability = StockService::getStockAvailability($product) ? 'in stock' : 'out of stock';
+                    $availability = 'in stock';
                     $item->addChild('g:availability', $availability, 'http://base.google.com/ns/1.0');
 
                     // Prix
